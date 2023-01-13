@@ -6,9 +6,10 @@ Tiện lợi cho việc xem điểm của học sinh, tất cả các con điể
 
 ## 2. Làm thế nào?
 Qua quá trình theo dõi cách hoạt động của tra cứu điểm vnEdu, chúng ta có hướng giải quyết như sau:
-### Thu thập cookie.
-- Khi vào trang web, sẽ có 
-### Cung cấp thông tin đi kèm với cookie.
-### Lấy dữ liệu, trả về kết quả.
+### 1. Thu thập cookie.
+### 2. Cung cấp thông tin đi kèm với cookie.
+### 3. Lấy dữ liệu, trả về kết quả.
 
-###
+## 3. Cài đặt
+Tải trực tiếp: 
+App đã có tự động kiểm tra cập nhật, sẽ có nhiều chức năng mới thêm vào và thay đổi giao diện.
