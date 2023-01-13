@@ -1,4 +1,4 @@
-# vnEduVanced
+# vnEdu Vanced
 Ứng dụng tùy chỉnh, không quảng cáo để xem điểm trên vnEdu dựa theo công văn 22 của bộ giáo dục (Đã thử ở các cột điểm của học sinh THPT)
 
 ## 1. Tại sao?
@@ -12,4 +12,7 @@ Qua quá trình theo dõi cách hoạt động của tra cứu điểm vnEdu, ch
 
 ## 3. Cài đặt
 Tải trực tiếp: 
+
 App đã có tự động kiểm tra cập nhật, sẽ có nhiều chức năng mới thêm vào và thay đổi giao diện.
+
+Chỉ cài được cho máy chạy Android, iPhone không được hỗ trợ vì không có kinh phí xuất bản ứng dụng lên cửa hàng!
