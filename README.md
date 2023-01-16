@@ -19,7 +19,7 @@ Có 4 API chính cần được lấy từ trang tra cứu của vnEdu:
 - API lấy bảng điểm dạng thô. (API 4)
 
 ### 2. Các bước xử lí:
-Bước 1: Gửi dữ liệu tới API 1
+#### Bước 1: Gửi dữ liệu tới API 1
 ```
 GET https://hocbadientu.vnedu.vn/sllservices/index.php?call=solienlac.search&search=<số điện thoại>&tinh_id=<id tỉnh>
 ```
@@ -61,7 +61,7 @@ Ta chỉ cần `PHPSESSID` và `BIGipServerAPP_EDU_HBDT`, hai miền này sẽ g
   "BIGipServerAPP_EDU_HBDT": "722837258.20480.0000"
 }
 ```
-Bước 2: Yêu cầu người dùng nhập mật khẩu và gửi tới API 2
+#### Bước 2: Yêu cầu người dùng nhập mật khẩu và gửi tới API 2
 
 Sau khi người dùng nhập mật khẩu thì gửi tới server yêu cầu nhập mật khẩu thứ 2:
 ```
@@ -83,7 +83,7 @@ Hoặc:
 ```
 Phần này sẽ quyết định liệu mật khẩu bạn nhập có đúng hay không. Nếu có, `success` sẽ là true, nếu sai thì là false.
 
-Bước 3: Lấy bảng điểm thô từ API 4
+#### Bước 3: Lấy bảng điểm thô từ API 4
 
 Khi tất cả mọi thứ đã hoàn thành, ta tiến hành yêu cầu bảng điểm từ server:
 ```
@@ -95,7 +95,7 @@ Từ đây, ta đã có dữ liệu của bảng điểm, chỉ cần phân tíc
 
 Trong API này sẽ trả về đầy đủ thông tin của 1 năm mình đã chọn, trong trường hợp này sẽ là `nam_hoc`.
 
-Bước tùy chọn: Đổi năm
+#### Bước tùy chọn: Đổi năm
 
 Khi người dùng muốn đổi năm, ta chỉ việc chạy lại bước 2 và 3, chỉ khác là `nam_hoc` theo người dùng chọn, API 3 sẽ cung cấp cho ta số năm.
 ```
