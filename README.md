@@ -11,6 +11,6 @@ Qua quá trình theo dõi cách hoạt động của tra cứu điểm vnEdu, ch
 ### 3. Lấy dữ liệu, trả về kết quả.
 
 ## 3. Cài đặt
-(Tải trực tiếp)[https://github.com/Neurs12/vnEduVanced/raw/main/app-release.apk]
+[Tải trực tiếp](https://github.com/Neurs12/vnEduVanced/raw/main/app-release.apk)
 
 Chỉ cài được cho máy chạy Android, iPhone không được hỗ trợ vì không có kinh phí xuất bản ứng dụng lên cửa hàng!
