@@ -1,8 +1,8 @@
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:vneduvanced/utils/reverse_api.dart';
 import 'package:vneduvanced/utils/saved_user.dart';
-import 'package:flutter/material.dart';
 import 'package:vneduvanced/screen_manager.dart';
+import 'package:flutter/material.dart';
 
 class SearchResultScreen extends StatefulWidget {
   final List<dynamic> data;
@@ -73,25 +73,11 @@ class _SearchResultScreenState extends State<SearchResultScreen> {
                   .then((result) {
                 if (result) {
                   saveAll(widget.phone, info["tinh_id"], info["ma_hoc_sinh"], password,
-                      info["nam_hoc"], info["full_name"]);
-                  receiveStudentScores(info["ma_hoc_sinh"], info["nam_hoc"], info["tinh_id"])
-                      .then((userObj) {
-                    getSemesterViewer().then((semester) {
-                      getYearViewer().then((year) {
-                        Navigator.of(context).popUntil((route) => route.isFirst);
-                        Navigator.pushReplacement(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => Screen().scores(
-                                    userObj,
-                                    info["full_name"],
-                                    info["ma_hoc_sinh"],
-                                    info["tinh_id"],
-                                    password,
-                                    semester,
-                                    year)));
-                      });
-                    });
+                          info["nam_hoc"], info["full_name"])
+                      .then((_) {
+                    Navigator.of(context).popUntil((route) => route.isFirst);
+                    Navigator.pushReplacement(
+                        context, MaterialPageRoute(builder: (context) => Screen().scores()));
                   });
                 } else {
                   ScaffoldMessenger.of(context).showSnackBar(const SnackBar(

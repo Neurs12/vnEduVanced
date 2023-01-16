@@ -1,26 +1,12 @@
-import 'package:vneduvanced/screen_manager.dart';
-import 'package:flutter/material.dart';
 import 'package:vneduvanced/utils/reverse_api.dart';
 import 'package:vneduvanced/utils/saved_user.dart';
+import 'package:vneduvanced/screen_manager.dart';
+import 'package:flutter/material.dart';
 
 class ScoresScreen extends StatefulWidget {
-  final dynamic userObj;
-  final String name;
-  final String studentId;
-  final String provinceId;
-  final String password;
-  final int semester;
-  final String year;
-  const ScoresScreen(
-      {Key? key,
-      required this.userObj,
-      required this.name,
-      required this.studentId,
-      required this.provinceId,
-      required this.password,
-      required this.semester,
-      required this.year})
-      : super(key: key);
+  const ScoresScreen({
+    Key? key,
+  }) : super(key: key);
 
   @override
   State<ScoresScreen> createState() => _ScoresScreenState();
@@ -28,20 +14,44 @@ class ScoresScreen extends StatefulWidget {
 
 class _ScoresScreenState extends State<ScoresScreen> {
   late int selectedSemester;
-  String selectedSemesterAsStr = "Học kì 1";
+  late String selectedSemesterAsStr;
 
   late String selectedYear;
+
+  late List<String> availableYearsDisplayer;
 
   late List<Widget> displayer;
   int scoresCount = 0;
   double totalScore = 0;
 
+  late Map<String, String>? userObj;
+  late dynamic overall;
+
+  Future<bool> infoBuilder() async {
+    userObj = await getAll();
+    selectedSemester = (await getSemesterViewer())!;
+    selectedSemesterAsStr = selectedSemester == 0 ? "Học kì 1" : "Học kì 2";
+    selectedYear = (await getYearViewer())!;
+    availableYearsDisplayer = await availableYears(userObj!["studentId"]!, userObj!["provinceId"]!);
+    return true;
+  }
+
+  Future<bool> dataBuilder() async {
+    if (userObj != null) {
+      overall = await fastReceiveStudentScores(userObj!["phone"]!, userObj!["provinceId"]!,
+          userObj!["studentId"]!, userObj!["password"]!, (await getYearViewer())!);
+    }
+    displayer = cardBuilder();
+    return true;
+  }
+
+  late Future<bool> infoDisplayer;
+  late Future<bool> dataDisplayer;
+
   @override
   void initState() {
     super.initState();
-    selectedSemester = widget.semester;
-    selectedYear = widget.year;
-    displayer = cardBuilder("");
+    infoDisplayer = infoBuilder().then((_) => dataDisplayer = dataBuilder());
   }
 
   @override
@@ -62,109 +72,105 @@ class _ScoresScreenState extends State<ScoresScreen> {
                 icon: const Icon(Icons.edit))
           ],
         ),
-        body: SingleChildScrollView(
-            child: Center(
-                child: Column(children: [
-          SizedBox(
-              height: 202,
-              child: Column(children: [
-                Row(children: [
-                  SizedBox(
-                      width: MediaQuery.of(context).size.width / 2,
-                      child: DropdownButtonFormField<String>(
-                        value: selectedSemesterAsStr,
-                        menuMaxHeight: 300,
-                        onChanged: (String? value) {
-                          setState(() => {
-                                selectedSemesterAsStr = value!,
-                                selectedSemester = selectedSemesterAsStr == "Học kì 1" ? 0 : 1,
-                                saveSemesterViewer(selectedSemester),
-                                scoresCount = 0,
-                                totalScore = 0,
-                                displayer = cardBuilder("")
-                              });
-                        },
-                        decoration: const InputDecoration(
-                          border: OutlineInputBorder(),
-                        ),
-                        items:
-                            ["Học kì 1", "Học kì 2"].map<DropdownMenuItem<String>>((String value) {
-                          return DropdownMenuItem<String>(
-                            value: value,
-                            child: Text(value),
-                          );
-                        }).toList(),
-                      )),
-                  SizedBox(
-                      width: MediaQuery.of(context).size.width / 2,
-                      child: FutureBuilder(
-                          future: availableYears(widget.studentId, widget.provinceId),
-                          builder: (context, snapshot) {
-                            if (snapshot.hasData) {
-                              return DropdownButtonFormField<String>(
-                                value: snapshot.data?.first,
-                                menuMaxHeight: 300,
-                                onChanged: (String? value) {
-                                  checkPassword(widget.studentId, widget.provinceId,
-                                          widget.password, value!)
-                                      .then((_) {
-                                    receiveStudentScores(widget.studentId, value, widget.provinceId)
-                                        .then((Map<dynamic, dynamic> res) {
-                                      setState(() => {
+        body: FutureBuilder(
+            future: infoDisplayer,
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.done) {
+                return SingleChildScrollView(
+                    child: Column(children: [
+                  Row(children: [
+                    SizedBox(
+                        width: MediaQuery.of(context).size.width / 2,
+                        child: DropdownButtonFormField<String>(
+                          value: selectedSemesterAsStr,
+                          menuMaxHeight: 300,
+                          onChanged: (String? value) {
+                            setState(() => {
+                                  selectedSemesterAsStr = value!,
+                                  selectedSemester = selectedSemesterAsStr == "Học kì 1" ? 0 : 1,
+                                  saveSemesterViewer(selectedSemester).then((_) =>
+                                      {scoresCount = 0, totalScore = 0, displayer = cardBuilder()}),
+                                });
+                          },
+                          decoration: const InputDecoration(
+                            border: OutlineInputBorder(),
+                          ),
+                          items: ["Học kì 1", "Học kì 2"]
+                              .map<DropdownMenuItem<String>>((String value) {
+                            return DropdownMenuItem<String>(
+                              value: value,
+                              child: Text(value),
+                            );
+                          }).toList(),
+                        )),
+                    SizedBox(
+                        width: MediaQuery.of(context).size.width / 2,
+                        child: DropdownButtonFormField<String>(
+                          value: selectedYear,
+                          menuMaxHeight: 300,
+                          onChanged: (String? value) {
+                            checkPassword(userObj!["studentId"]!, userObj!["provinceId"]!,
+                                    userObj!["password"]!, value!)
+                                .then((_) {
+                              receiveStudentScores(
+                                      userObj!["studentId"]!, value, userObj!["provinceId"]!)
+                                  .then((Map<dynamic, dynamic> res) {
+                                setState(() => {
+                                      saveYearViewer(value).then((_) => {
                                             scoresCount = 0,
                                             totalScore = 0,
-                                            saveYearViewer(value),
-                                            displayer = cardBuilder(res)
-                                          });
+                                            dataDisplayer = dataBuilder()
+                                          }),
                                     });
-                                  });
-                                },
-                                decoration: const InputDecoration(
-                                  border: OutlineInputBorder(),
-                                ),
-                                items: snapshot.data?.map<DropdownMenuItem<String>>((String value) {
-                                  return DropdownMenuItem<String>(
-                                    value: value,
-                                    child: Text(value),
-                                  );
-                                }).toList(),
-                              );
-                            }
-                            return DropdownButtonFormField<String>(
-                              value: "...",
-                              menuMaxHeight: 300,
-                              onChanged: (String? value) => {},
-                              decoration: const InputDecoration(
-                                border: OutlineInputBorder(),
-                              ),
-                              items: ["..."].map<DropdownMenuItem<String>>((String value) {
-                                return DropdownMenuItem<String>(
-                                  value: value,
-                                  child: Text(value),
-                                );
-                              }).toList(),
+                              });
+                            });
+                          },
+                          decoration: const InputDecoration(
+                            border: OutlineInputBorder(),
+                          ),
+                          items:
+                              availableYearsDisplayer.map<DropdownMenuItem<String>>((String value) {
+                            return DropdownMenuItem<String>(
+                              value: value,
+                              child: Text(value),
                             );
-                          }))
-                ]),
-                Padding(
-                    padding: const EdgeInsets.only(bottom: 20, top: 10),
-                    child: Text(widget.name, style: const TextStyle(fontSize: 28))),
-                const Text("Trung bình môn"),
-                Text((totalScore / scoresCount).toStringAsFixed(1),
-                    style: const TextStyle(fontSize: 32)),
-              ])),
-          Wrap(
-              runAlignment: WrapAlignment.center,
-              crossAxisAlignment: WrapCrossAlignment.center,
-              children: displayer)
-        ]))));
+                          }).toList(),
+                        ))
+                  ]),
+                  FutureBuilder(
+                      future: dataDisplayer,
+                      builder: (context, snapshot) {
+                        if (snapshot.connectionState == ConnectionState.done) {
+                          return Center(
+                              child: Column(children: [
+                            SizedBox(
+                                height: 202,
+                                child: Column(children: [
+                                  Padding(
+                                      padding: const EdgeInsets.only(bottom: 20, top: 10),
+                                      child: Text(userObj!["name"]!,
+                                          style: const TextStyle(fontSize: 28))),
+                                  const Text("Trung bình môn"),
+                                  Text((totalScore / scoresCount).toStringAsFixed(1),
+                                      style: const TextStyle(fontSize: 32)),
+                                ])),
+                            Wrap(
+                                runAlignment: WrapAlignment.center,
+                                crossAxisAlignment: WrapCrossAlignment.center,
+                                children: displayer)
+                          ]));
+                        }
+                        return const Text("Đang lấy dữ liệu...");
+                      })
+                ]));
+              }
+              return const Text("Đang đăng nhập...");
+            }));
   }
 
-  List<Widget> cardBuilder(dynamic customObj) {
+  List<Widget> cardBuilder() {
     return [
-      for (dynamic subject in customObj == ""
-          ? widget.userObj["diem"][selectedSemester]["mon_hoc"]
-          : customObj["diem"][selectedSemester]["mon_hoc"])
+      for (dynamic subject in overall["diem"][selectedSemester]["mon_hoc"])
         Card(
             child: InkWell(
                 borderRadius: BorderRadius.circular(12),
@@ -252,19 +258,19 @@ class _ScoresScreenState extends State<ScoresScreen> {
       int co = 0;
 
       for (String score in keys) {
-        if (score == "TX") {
+        if (score == "TX" || score == "M" || score == "P") {
           co += subject[score].length as int;
           for (dynamic chip in subject[score]) {
             out += double.parse(chip["diem"]);
           }
         }
-        if (score == "GK") {
+        if (score == "GK" || score == "V") {
           co += (subject[score].length as int) * 2;
           for (dynamic chip in subject[score]) {
             out += double.parse(chip["diem"]) * 2;
           }
         }
-        if (score == "CK") {
+        if (score == "CK" || score == "HK") {
           co += (subject[score].length as int) * 3;
           for (dynamic chip in subject[score]) {
             out += double.parse(chip["diem"]) * 3;
@@ -273,7 +279,6 @@ class _ScoresScreenState extends State<ScoresScreen> {
       }
       String re = (out / co).toStringAsFixed(1);
       double numRe = double.parse(re);
-
       totalScore += re == "NaN" ? 0 : numRe;
       scoresCount += re == "NaN" ? 0 : 1;
 
