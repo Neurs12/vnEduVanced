@@ -51,7 +51,7 @@ class _ScoresScreenState extends State<ScoresScreen> {
   @override
   void initState() {
     super.initState();
-    infoDisplayer = infoBuilder().then((_) => dataDisplayer = dataBuilder());
+    infoDisplayer = (infoBuilder()).then((_) => dataDisplayer = dataBuilder());
   }
 
   @override
@@ -81,61 +81,61 @@ class _ScoresScreenState extends State<ScoresScreen> {
                   Row(children: [
                     SizedBox(
                         width: MediaQuery.of(context).size.width / 2,
-                        child: DropdownButtonFormField<String>(
-                          value: selectedSemesterAsStr,
-                          menuMaxHeight: 300,
-                          onChanged: (String? value) {
-                            setState(() => {
-                                  selectedSemesterAsStr = value!,
-                                  selectedSemester = selectedSemesterAsStr == "Học kì 1" ? 0 : 1,
-                                  saveSemesterViewer(selectedSemester).then((_) =>
-                                      {scoresCount = 0, totalScore = 0, displayer = cardBuilder()}),
-                                });
-                          },
-                          decoration: const InputDecoration(
-                            border: OutlineInputBorder(),
-                          ),
-                          items: ["Học kì 1", "Học kì 2"]
-                              .map<DropdownMenuItem<String>>((String value) {
-                            return DropdownMenuItem<String>(
-                              value: value,
-                              child: Text(value),
-                            );
-                          }).toList(),
-                        )),
+                        child: Padding(
+                            padding: const EdgeInsets.only(left: 20, right: 10),
+                            child: DropdownButtonFormField<String>(
+                              value: selectedSemesterAsStr,
+                              menuMaxHeight: 300,
+                              onChanged: (String? value) {
+                                selectedSemesterAsStr = value!;
+                                selectedSemester = selectedSemesterAsStr == "Học kì 1" ? 0 : 1;
+                                saveSemesterViewer(selectedSemester).then((_) => setState(() =>
+                                    {scoresCount = 0, totalScore = 0, displayer = cardBuilder()}));
+                              },
+                              decoration: const InputDecoration(
+                                border: OutlineInputBorder(),
+                              ),
+                              items: ["Học kì 1", "Học kì 2"]
+                                  .map<DropdownMenuItem<String>>((String value) {
+                                return DropdownMenuItem<String>(
+                                  value: value,
+                                  child: Text(value),
+                                );
+                              }).toList(),
+                            ))),
                     SizedBox(
                         width: MediaQuery.of(context).size.width / 2,
-                        child: DropdownButtonFormField<String>(
-                          value: selectedYear,
-                          menuMaxHeight: 300,
-                          onChanged: (String? value) {
-                            checkPassword(userObj!["studentId"]!, userObj!["provinceId"]!,
-                                    userObj!["password"]!, value!)
-                                .then((_) {
-                              receiveStudentScores(
-                                      userObj!["studentId"]!, value, userObj!["provinceId"]!)
-                                  .then((Map<dynamic, dynamic> res) {
-                                setState(() => {
-                                      saveYearViewer(value).then((_) => {
-                                            scoresCount = 0,
-                                            totalScore = 0,
-                                            dataDisplayer = dataBuilder()
-                                          }),
-                                    });
-                              });
-                            });
-                          },
-                          decoration: const InputDecoration(
-                            border: OutlineInputBorder(),
-                          ),
-                          items:
-                              availableYearsDisplayer.map<DropdownMenuItem<String>>((String value) {
-                            return DropdownMenuItem<String>(
-                              value: value,
-                              child: Text(value),
-                            );
-                          }).toList(),
-                        ))
+                        child: Padding(
+                            padding: const EdgeInsets.only(left: 10, right: 20),
+                            child: DropdownButtonFormField<String>(
+                              value: selectedYear,
+                              menuMaxHeight: 300,
+                              onChanged: (String? value) {
+                                checkPassword(userObj!["studentId"]!, userObj!["provinceId"]!,
+                                        userObj!["password"]!, value!)
+                                    .then((_) {
+                                  receiveStudentScores(
+                                          userObj!["studentId"]!, value, userObj!["provinceId"]!)
+                                      .then((Map<dynamic, dynamic> res) {
+                                    saveYearViewer(value).then((_) => setState(() => {
+                                          scoresCount = 0,
+                                          totalScore = 0,
+                                          dataDisplayer = dataBuilder()
+                                        }));
+                                  });
+                                });
+                              },
+                              decoration: const InputDecoration(
+                                border: OutlineInputBorder(),
+                              ),
+                              items: availableYearsDisplayer
+                                  .map<DropdownMenuItem<String>>((String value) {
+                                return DropdownMenuItem<String>(
+                                  value: value,
+                                  child: Text(value),
+                                );
+                              }).toList(),
+                            )))
                   ]),
                   FutureBuilder(
                       future: dataDisplayer,
@@ -290,7 +290,7 @@ class _ScoresScreenState extends State<ScoresScreen> {
                   ? numRe >= 8
                       ? Colors.green
                       : numRe >= 6.5
-                          ? Colors.yellow
+                          ? Colors.yellow[600]
                           : numRe >= 5
                               ? Colors.orange
                               : Colors.red

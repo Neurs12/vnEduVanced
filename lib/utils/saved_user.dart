@@ -41,7 +41,6 @@ Future<bool> saveAll(String phone, String provinceId, String studentId, String p
 Future<String?> getYearViewer() async {
   final prefs = await SharedPreferences.getInstance();
   String? year = prefs.getString("year");
-
   return year ?? DateTime.now().year.toString();
 }
 
@@ -61,4 +60,28 @@ Future<bool> saveSemesterViewer(int semester) async {
   final prefs = await SharedPreferences.getInstance();
   await prefs.setInt("semester", semester);
   return true;
+}
+
+Future<bool> checkUser() async {
+  final prefs = await SharedPreferences.getInstance();
+  if (prefs.getString("phone") == null ||
+      prefs.getString("provinceId") == null ||
+      prefs.getString("studentId") == null ||
+      prefs.getString("password") == null ||
+      prefs.getString("year") == null ||
+      prefs.getString("name") == null) {
+    return false;
+  }
+  return true;
+}
+
+Future<bool> setSkipVersion(version) async {
+  final prefs = await SharedPreferences.getInstance();
+  await prefs.setString("skipVersion", version);
+  return true;
+}
+
+Future<String> getSkipVersion() async {
+  final prefs = await SharedPreferences.getInstance();
+  return prefs.getString("skipVersion") ?? "";
 }

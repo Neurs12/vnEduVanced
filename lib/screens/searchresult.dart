@@ -77,7 +77,7 @@ class _SearchResultScreenState extends State<SearchResultScreen> {
                       .then((_) {
                     Navigator.of(context).popUntil((route) => route.isFirst);
                     Navigator.pushReplacement(
-                        context, MaterialPageRoute(builder: (context) => Screen().scores()));
+                        context, MaterialPageRoute(builder: (context) => Screen().scores));
                   });
                 } else {
                   ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
