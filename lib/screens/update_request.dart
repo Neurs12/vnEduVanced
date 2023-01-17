@@ -1,8 +1,12 @@
+import 'package:permission_handler/permission_handler.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:vneduvanced/utils/check_update.dart';
+import 'package:open_file_plus/open_file_plus.dart';
 import 'package:vneduvanced/utils/saved_user.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:vneduvanced/screen_manager.dart';
 import 'package:flutter/material.dart';
+import 'package:dio/dio.dart';
 
 class UpdatePrompt extends StatefulWidget {
   const UpdatePrompt({Key? key}) : super(key: key);
@@ -12,6 +16,9 @@ class UpdatePrompt extends StatefulWidget {
 }
 
 class _UpdatePromptState extends State<UpdatePrompt> {
+  bool downloading = false;
+  String percent = "0%";
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -23,9 +30,29 @@ class _UpdatePromptState extends State<UpdatePrompt> {
                   padding: const EdgeInsets.only(bottom: 10),
                   child: StatefulBuilder(builder: (context, downloader) {
                     return FloatingActionButton.extended(
-                        onPressed: () {},
+                        onPressed: downloading
+                            ? null
+                            : () async {
+                                downloading = !downloading;
+                                if (!(await Permission.storage.request().isGranted)) {
+                                  downloading = !downloading;
+                                  return;
+                                }
+                                await Dio().download(
+                                    "https://github.com/Neurs12/vnEduVanced/raw/main/app-release.apk",
+                                    "${(await getTemporaryDirectory()).path}/app-release.apk",
+                                    onReceiveProgress: (received, total) {
+                                  if (total != -1) {
+                                    setState(() {
+                                      percent = "${(received / total * 100).toStringAsFixed(0)}%";
+                                    });
+                                  }
+                                });
+                                OpenFile.open(
+                                    "${(await getTemporaryDirectory()).path}/app-release.apk");
+                              },
                         icon: const Icon(Icons.downloading),
-                        label: const Text("Cài đặt"));
+                        label: Text(downloading ? percent : "Cài đặt"));
                   })),
               Padding(
                   padding: const EdgeInsets.only(bottom: 10),
