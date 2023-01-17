@@ -15,10 +15,10 @@ Chỉ cài được cho máy chạy Android, iPhone không được hỗ trợ v
 Code về phần này được cung cấp ở [lib/utils/reverse_api.dart](https://github.com/Neurs12/vnEduVanced/blob/main/lib/utils/reverse_api.dart)
 ### 1. Tổng quan:
 Có 4 API chính cần được lấy từ trang tra cứu của vnEdu:
-- API tra cứu qua số điện thoại và tỉnh thành. (API 1)
-- API kiểm tra mật khẩu. (API 2)
-- API lấy số năm học được cấp trong tài khoản. (API 3)
-- API lấy bảng điểm dạng thô. (API 4)
+- API tra cứu qua số điện thoại và tỉnh thành. (API 1 | `solienlac.search`)
+- API kiểm tra mật khẩu. (API 2 | `solienlac.checkSll)
+- API lấy số năm học được cấp trong tài khoản. (API 3 | `solienlac.getDSNamhoc)
+- API lấy bảng điểm dạng thô. (API 4 | `solienlac.getSodiem)
 
 ### 2. Các bước xử lí:
 #### Bước 1: Gửi dữ liệu tới API 1
