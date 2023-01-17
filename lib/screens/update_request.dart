@@ -57,65 +57,69 @@ class _UpdatePromptState extends State<UpdatePrompt> {
               Padding(
                   padding: const EdgeInsets.only(bottom: 10),
                   child: FloatingActionButton.extended(
-                      onPressed: () async {
-                        dynamic route = Screen().landing;
+                      onPressed: downloading
+                          ? null
+                          : () async {
+                              dynamic route = Screen().landing;
 
-                        if (await checkUser()) {
-                          route = Screen().scores;
-                        }
-                        if (!mounted) return;
-                        Navigator.of(context).popUntil((route) => route.isFirst);
-                        Navigator.pushReplacement(
-                          context,
-                          PageRouteBuilder(
-                            pageBuilder: (context, animation1, animation2) => route,
-                            transitionDuration: Duration.zero,
-                            reverseTransitionDuration: Duration.zero,
-                          ),
-                        );
-                      },
+                              if (await checkUser()) {
+                                route = Screen().scores;
+                              }
+                              if (!mounted) return;
+                              Navigator.of(context).popUntil((route) => route.isFirst);
+                              Navigator.pushReplacement(
+                                context,
+                                PageRouteBuilder(
+                                  pageBuilder: (context, animation1, animation2) => route,
+                                  transitionDuration: Duration.zero,
+                                  reverseTransitionDuration: Duration.zero,
+                                ),
+                              );
+                            },
                       icon: const Icon(Icons.event_repeat),
                       label: const Text("Nhắc tôi sau"))),
               FloatingActionButton.extended(
-                  onPressed: () => showDialog<void>(
-                        context: context,
-                        builder: (BuildContext context) {
-                          return AlertDialog(
-                            title: const Text("Bỏ qua cập nhật"),
-                            content: const Text("Bạn có muốn bỏ qua bản cập nhật này không?"),
-                            actions: <Widget>[
-                              TextButton(
-                                child: const Text("Quay lại"),
-                                onPressed: () {
-                                  Navigator.of(context).pop();
-                                },
-                              ),
-                              TextButton(
-                                child: const Text("Ok"),
-                                onPressed: () {
-                                  setSkipVersion(lastestRelease).then((_) async {
-                                    dynamic route = Screen().landing;
+                  onPressed: downloading
+                      ? null
+                      : () => showDialog<void>(
+                            context: context,
+                            builder: (BuildContext context) {
+                              return AlertDialog(
+                                title: const Text("Bỏ qua cập nhật"),
+                                content: const Text("Bạn có muốn bỏ qua bản cập nhật này không?"),
+                                actions: <Widget>[
+                                  TextButton(
+                                    child: const Text("Quay lại"),
+                                    onPressed: () {
+                                      Navigator.of(context).pop();
+                                    },
+                                  ),
+                                  TextButton(
+                                    child: const Text("Ok"),
+                                    onPressed: () {
+                                      setSkipVersion(lastestRelease).then((_) async {
+                                        dynamic route = Screen().landing;
 
-                                    if (await checkUser()) {
-                                      route = Screen().scores;
-                                    }
-                                    if (!mounted) return;
-                                    Navigator.of(context).popUntil((route) => route.isFirst);
-                                    Navigator.pushReplacement(
-                                      context,
-                                      PageRouteBuilder(
-                                        pageBuilder: (context, animation1, animation2) => route,
-                                        transitionDuration: Duration.zero,
-                                        reverseTransitionDuration: Duration.zero,
-                                      ),
-                                    );
-                                  });
-                                },
-                              ),
-                            ],
-                          );
-                        },
-                      ),
+                                        if (await checkUser()) {
+                                          route = Screen().scores;
+                                        }
+                                        if (!mounted) return;
+                                        Navigator.of(context).popUntil((route) => route.isFirst);
+                                        Navigator.pushReplacement(
+                                          context,
+                                          PageRouteBuilder(
+                                            pageBuilder: (context, animation1, animation2) => route,
+                                            transitionDuration: Duration.zero,
+                                            reverseTransitionDuration: Duration.zero,
+                                          ),
+                                        );
+                                      });
+                                    },
+                                  ),
+                                ],
+                              );
+                            },
+                          ),
                   icon: const Icon(Icons.cancel_outlined),
                   label: const Text("Bỏ qua bản này")),
             ]),
