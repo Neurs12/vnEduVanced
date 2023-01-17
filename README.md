@@ -12,7 +12,7 @@ Chỉ cài được cho máy chạy Android, iPhone không được hỗ trợ v
 Ứng dụng có kiểm tra cập nhật nên không cần cập nhật bằng cách tải từ đây nhiều lần!
 
 ## 3. Cách hoạt động
-Giải pháp về cách sử dụng được áp dụng tại [lib/utils/reverse_api.dart](https://github.com/Neurs12/vnEduVanced/blob/main/lib/utils/reverse_api.dart)
+**Giải pháp về cách sử dụng được áp dụng tại [lib/utils/reverse_api.dart](https://github.com/Neurs12/vnEduVanced/blob/main/lib/utils/reverse_api.dart)**
 ### 1. Tổng quan:
 Có 4 API chính cần được lấy từ trang tra cứu của vnEdu:
 - API tra cứu qua số điện thoại và tỉnh thành. (API 1 | `solienlac.search`)
