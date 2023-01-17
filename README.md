@@ -9,6 +9,8 @@ Tiện lợi cho việc xem điểm của học sinh, tất cả các con điể
 
 Chỉ cài được cho máy chạy Android, iPhone không được hỗ trợ vì không có kinh phí xuất bản ứng dụng lên cửa hàng!
 
+Ứng dụng có kiểm tra cập nhật nên không cần cập nhật bằng cách tải từ đây nhiều lần!
+
 ## 3. Cách hoạt động
 Code về phần này được cung cấp ở [lib/utils/reverse_api.dart](https://github.com/Neurs12/vnEduVanced/blob/main/lib/utils/reverse_api.dart)
 ### 1. Tổng quan:
