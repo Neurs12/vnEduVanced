@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:vneduvanced/utils/check_update.dart';
-import 'package:vneduvanced/screen_manager.dart';
-import 'package:vneduvanced/utils/saved_user.dart';
+import 'package:vneduvanced/utils/launch_navigator.dart';
 
 class NoInternet extends StatefulWidget {
   const NoInternet({Key? key}) : super(key: key);
@@ -30,22 +28,7 @@ class _NoInternetState extends State<NoInternet> {
                   ? null
                   : () async {
                       setState(() => retrying = !retrying);
-                      dynamic route = Screen().landing;
-                      bool status = false;
-
-                      if (await checkUser()) {
-                        route = Screen().scores;
-                      }
-                      try {
-                        status = await checkUpdate();
-                      } catch (_) {
-                        route = Screen().noInternet;
-                      }
-
-                      if (status) {
-                        route = Screen().update;
-                      }
-
+                      Widget route = await navigate();
                       if (!mounted) return;
                       Navigator.of(context).popUntil((route) => route.isFirst);
                       Navigator.pushReplacement(

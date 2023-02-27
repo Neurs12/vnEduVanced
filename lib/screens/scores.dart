@@ -1,7 +1,9 @@
+import 'package:vneduvanced/main.dart';
 import 'package:vneduvanced/utils/reverse_api.dart';
-import 'package:vneduvanced/utils/saved_user.dart';
+import 'package:vneduvanced/utils/prefs.dart';
 import 'package:vneduvanced/screen_manager.dart';
 import 'package:flutter/material.dart';
+import 'styles_setup.dart';
 
 class ScoresScreen extends StatefulWidget {
   const ScoresScreen({
@@ -14,18 +16,18 @@ class ScoresScreen extends StatefulWidget {
 
 class _ScoresScreenState extends State<ScoresScreen> {
   late int selectedSemester;
-  late String selectedSemesterAsStr;
 
-  late String selectedYear;
+  late String selectedSemesterAsStr, selectedYear;
 
   late List<String> availableYearsDisplayer;
 
-  late List<Widget> displayer;
-  int scoresCount = 0;
-  double totalScore = 0;
+  ValueNotifier<double> scoresCount = ValueNotifier<double>(0),
+      totalScore = ValueNotifier<double>(0);
 
   late Map<String, String>? userObj;
-  late dynamic overall;
+  Map<String, dynamic> overall = {};
+
+  late Future<bool> infoDisplayer, dataDisplayer;
 
   Future<bool> infoBuilder() async {
     userObj = await getAll();
@@ -41,23 +43,33 @@ class _ScoresScreenState extends State<ScoresScreen> {
       overall = await fastReceiveStudentScores(userObj!["phone"]!, userObj!["provinceId"]!,
           userObj!["studentId"]!, userObj!["password"]!, (await getYearViewer())!);
     }
-    displayer = cardBuilder();
     return true;
   }
 
-  late Future<bool> infoDisplayer;
-  late Future<bool> dataDisplayer;
+  Future<bool> midBridgeBuild() async {
+    if (userObj != null) {
+      overall = await onGoingStudentScores(
+          userObj!["studentId"]!, (await getYearViewer())!, userObj!["provinceId"]!);
+    }
+
+    return true;
+  }
 
   @override
   void initState() {
     super.initState();
-    infoDisplayer = (infoBuilder()).then((_) => dataDisplayer = dataBuilder());
+    infoDisplayer = infoBuilder().then((_) => dataDisplayer = dataBuilder());
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
+          centerTitle: true,
+          leading: IconButton(
+              onPressed: () => Navigator.of(context)
+                  .pushReplacement(MaterialPageRoute(builder: (context) => const StyleSetup())),
+              icon: const Icon(Icons.color_lens_outlined)),
           title: const Text("vnEdu Vanced"),
           actions: [
             IconButton(
@@ -66,9 +78,7 @@ class _ScoresScreenState extends State<ScoresScreen> {
                 hoverColor: Colors.transparent,
                 focusColor: Colors.transparent,
                 onPressed: () => Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => Screen().landing),
-                    ),
+                    context, MaterialPageRoute(builder: (context) => Screen().landing)),
                 icon: const Icon(Icons.edit))
           ],
         ),
@@ -89,12 +99,10 @@ class _ScoresScreenState extends State<ScoresScreen> {
                               onChanged: (String? value) {
                                 selectedSemesterAsStr = value!;
                                 selectedSemester = selectedSemesterAsStr == "Học kì 1" ? 0 : 1;
-                                saveSemesterViewer(selectedSemester).then((_) => setState(() =>
-                                    {scoresCount = 0, totalScore = 0, displayer = cardBuilder()}));
+                                saveSemesterViewer(selectedSemester).then((_) =>
+                                    setState(() => {scoresCount.value = 0, totalScore.value = 0}));
                               },
-                              decoration: const InputDecoration(
-                                border: OutlineInputBorder(),
-                              ),
+                              decoration: const InputDecoration(border: OutlineInputBorder()),
                               items: ["Học kì 1", "Học kì 2"]
                                   .map<DropdownMenuItem<String>>((String value) {
                                 return DropdownMenuItem<String>(
@@ -118,16 +126,14 @@ class _ScoresScreenState extends State<ScoresScreen> {
                                           userObj!["studentId"]!, value, userObj!["provinceId"]!)
                                       .then((Map<dynamic, dynamic> res) {
                                     saveYearViewer(value).then((_) => setState(() => {
-                                          scoresCount = 0,
-                                          totalScore = 0,
-                                          dataDisplayer = dataBuilder()
+                                          scoresCount.value = 0,
+                                          totalScore.value = 0,
+                                          dataDisplayer = midBridgeBuild()
                                         }));
                                   });
                                 });
                               },
-                              decoration: const InputDecoration(
-                                border: OutlineInputBorder(),
-                              ),
+                              decoration: const InputDecoration(border: OutlineInputBorder()),
                               items: availableYearsDisplayer
                                   .map<DropdownMenuItem<String>>((String value) {
                                 return DropdownMenuItem<String>(
@@ -151,45 +157,50 @@ class _ScoresScreenState extends State<ScoresScreen> {
                                       child: Text(userObj!["name"]!,
                                           style: const TextStyle(fontSize: 28))),
                                   const Text("Trung bình môn"),
-                                  Text((totalScore / scoresCount).toStringAsFixed(1),
-                                      style: const TextStyle(fontSize: 32)),
+                                  AnimatedBuilder(
+                                      animation: Listenable.merge([scoresCount, totalScore]),
+                                      builder: (context, child) {
+                                        return Text(
+                                            (totalScore.value / scoresCount.value)
+                                                .toStringAsFixed(1),
+                                            style: const TextStyle(fontSize: 32));
+                                      })
                                 ])),
                             Wrap(
                                 runAlignment: WrapAlignment.center,
                                 crossAxisAlignment: WrapCrossAlignment.center,
-                                children: displayer)
+                                children: [
+                                  for (dynamic subject in overall["diem"][selectedSemester]
+                                      ["mon_hoc"])
+                                    Card(
+                                        child: InkWell(
+                                            borderRadius: BorderRadius.circular(12),
+                                            onTap: () => showScoresInfo(subject),
+                                            child: SizedBox(
+                                                height: 100,
+                                                width: 175,
+                                                child: Padding(
+                                                  padding: const EdgeInsets.all(12),
+                                                  child: Column(
+                                                      mainAxisAlignment: MainAxisAlignment.center,
+                                                      children: [
+                                                        Text(subject["ten_mon_hoc"],
+                                                            style: const TextStyle(fontSize: 16),
+                                                            textAlign: TextAlign.center,
+                                                            maxLines: 2,
+                                                            overflow: TextOverflow.fade),
+                                                        scoreScan(subject)
+                                                      ]),
+                                                ))))
+                                ])
                           ]));
                         }
-                        return const Text("Đang lấy dữ liệu...");
+                        return const DummyGrayboxLoader(loginLoad: false);
                       })
                 ]));
               }
-              return const Text("Đang đăng nhập...");
+              return const DummyGrayboxLoader(loginLoad: true);
             }));
-  }
-
-  List<Widget> cardBuilder() {
-    return [
-      for (dynamic subject in overall["diem"][selectedSemester]["mon_hoc"])
-        Card(
-            child: InkWell(
-                borderRadius: BorderRadius.circular(12),
-                onTap: () => showScoresInfo(subject),
-                child: SizedBox(
-                    height: 100,
-                    width: 175,
-                    child: Padding(
-                      padding: const EdgeInsets.all(12),
-                      child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
-                        Text(subject["ten_mon_hoc"],
-                            style: const TextStyle(fontSize: 16),
-                            textAlign: TextAlign.center,
-                            maxLines: 2,
-                            overflow: TextOverflow.fade),
-                        scoreScan(subject)
-                      ]),
-                    ))))
-    ];
   }
 
   Future<void> showScoresInfo(subject) {
@@ -279,8 +290,8 @@ class _ScoresScreenState extends State<ScoresScreen> {
       }
       String re = (out / co).toStringAsFixed(1);
       double numRe = double.parse(re);
-      totalScore += re == "NaN" ? 0 : numRe;
-      scoresCount += re == "NaN" ? 0 : 1;
+      totalScore.value += re == "NaN" ? 0 : numRe;
+      scoresCount.value += re == "NaN" ? 0 : 1;
 
       return Text(re == "NaN" ? "Không có" : re,
           style: TextStyle(
@@ -314,5 +325,75 @@ class _ScoresScreenState extends State<ScoresScreen> {
               color: !failed ? Colors.green : Colors.red),
           textAlign: TextAlign.center);
     }
+  }
+}
+
+class DummyGrayboxLoader extends StatelessWidget {
+  final bool loginLoad;
+  const DummyGrayboxLoader({super.key, required this.loginLoad});
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+        child: Column(children: [
+      loginLoad
+          ? Row(children: [
+              SizedBox(
+                  width: MediaQuery.of(context).size.width / 2,
+                  child: const Padding(
+                      padding: EdgeInsets.only(left: 20, right: 10),
+                      child: GrayBox(height: 65, width: double.infinity, radius: 5))),
+              SizedBox(
+                  width: MediaQuery.of(context).size.width / 2,
+                  child: const Padding(
+                      padding: EdgeInsets.only(left: 20, right: 10),
+                      child: GrayBox(height: 65, width: double.infinity, radius: 5))),
+            ])
+          : Container(),
+      SizedBox(
+          height: 202,
+          child: Column(children: const [
+            Padding(
+                padding: EdgeInsets.only(bottom: 20, top: 10),
+                child: GrayBox(height: 40, width: 250)),
+            GrayBox(height: 20, width: 120),
+            Padding(padding: EdgeInsets.only(top: 8), child: GrayBox(height: 40, width: 70))
+          ])),
+      Wrap(
+          runAlignment: WrapAlignment.center,
+          crossAxisAlignment: WrapCrossAlignment.center,
+          children: [
+            for (int i = 0; i < 10; i++)
+              Card(
+                  child: SizedBox(
+                      height: 100,
+                      width: 175,
+                      child: Padding(
+                        padding: const EdgeInsets.all(12),
+                        child: Column(mainAxisAlignment: MainAxisAlignment.center, children: const [
+                          GrayBox(height: 20, width: 80),
+                          Padding(
+                              padding: EdgeInsets.only(top: 5),
+                              child: GrayBox(height: 30, width: 70))
+                        ]),
+                      )))
+          ])
+    ]));
+  }
+}
+
+class GrayBox extends StatelessWidget {
+  final double height, width;
+  final double? radius;
+  const GrayBox({super.key, required this.height, required this.width, this.radius});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+        height: height,
+        width: width,
+        decoration: BoxDecoration(
+            color: Colors.grey[themeMode.value == ThemeMode.dark ? 700 : 300],
+            borderRadius: BorderRadius.all(Radius.circular(radius ?? 10000))));
   }
 }

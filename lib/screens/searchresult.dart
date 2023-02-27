@@ -1,6 +1,6 @@
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:vneduvanced/utils/reverse_api.dart';
-import 'package:vneduvanced/utils/saved_user.dart';
+import 'package:vneduvanced/utils/prefs.dart';
 import 'package:vneduvanced/screen_manager.dart';
 import 'package:flutter/material.dart';
 
@@ -85,7 +85,7 @@ class _SearchResultScreenState extends State<SearchResultScreen> {
                           borderRadius: BorderRadius.all(Radius.circular(20))),
                       margin: EdgeInsets.only(bottom: 130, left: 20, right: 20),
                       behavior: SnackBarBehavior.floating,
-                      content: Text("Sai mật khẩu. Vui lòng lòng kiểm tra lại!",
+                      content: Text("Sai mật khẩu. Vui lòng kiểm tra lại!",
                           textAlign: TextAlign.center)));
                   setState(() => isWrongPass = true);
                   Future.delayed(const Duration(seconds: 4, milliseconds: 400))

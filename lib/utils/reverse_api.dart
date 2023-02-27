@@ -61,3 +61,7 @@ Future<dynamic> fastReceiveStudentScores(
   }
   return false;
 }
+
+Future<dynamic> onGoingStudentScores(String studentId, String year, String provinceId) async {
+  return receiveStudentScores(studentId, year, provinceId);
+}
