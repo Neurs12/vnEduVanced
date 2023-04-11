@@ -1,4 +1,4 @@
 {
   "version": "1.4.8",
-  "changelog": "## Improvements:\n- Bổ các trường hợp mất mạng để thông báo lỗi cho người dùng.\n- Sửa lỗi mật khẩu hiển thị.\n- Sử dụng Toast để hiển thị, tránh tình trạng không thể chỉnh sửa mật khẩu khi thông báo"
+  "changelog": "## Improvements:\n- Bổ sung các trường hợp mất mạng để thông báo lỗi cho người dùng.\n- Sửa lỗi mật khẩu hiển thị.\n- Sử dụng Toast để hiển thị, tránh tình trạng không thể chỉnh sửa mật khẩu khi thông báo"
 }
