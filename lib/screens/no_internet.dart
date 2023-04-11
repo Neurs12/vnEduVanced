@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:vneduvanced/utils/launch_navigator.dart';
+import '../utils/launch_navigator.dart';
 
 class NoInternet extends StatefulWidget {
   const NoInternet({Key? key}) : super(key: key);

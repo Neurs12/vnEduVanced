@@ -1,4 +1,5 @@
-import 'package:vneduvanced/utils/reverse_api.dart';
+import '../utils/reverse_api.dart';
+import '../utils/prefs.dart';
 import 'package:flutter/material.dart';
 import 'searchresult.dart';
 
@@ -77,8 +78,17 @@ List<String> provinces = [
 ];
 
 class _LandingScreenState extends State<LandingScreen> {
-  String selectedProvince = "Chọn tỉnh", phoneNumber = "", error = "";
+  ValueNotifier<String> selectedProvince = ValueNotifier<String>("Chọn tỉnh");
+  String phoneNumber = "", error = "";
   bool finding = false;
+
+  @override
+  void initState() {
+    super.initState();
+    getAll().then((sn) => sn.runtimeType != Null
+        ? selectedProvince.value = provinces[int.parse(sn!["provinceId"]!) - 1]
+        : null);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -95,25 +105,27 @@ class _LandingScreenState extends State<LandingScreen> {
                   padding: EdgeInsets.only(bottom: 30),
                   child: Text("Vui lòng chọn tỉnh và nhập số điện thoại để tra cứu học sinh.",
                       textAlign: TextAlign.center)),
-              DropdownButtonFormField<String>(
-                value: selectedProvince,
-                menuMaxHeight: 300,
-                onChanged: (String? value) {
-                  setState(() {
-                    selectedProvince = value!;
-                  });
-                },
-                decoration: const InputDecoration(
-                  labelText: "Tỉnh",
-                  border: OutlineInputBorder(),
-                ),
-                items: provinces.map<DropdownMenuItem<String>>((String value) {
-                  return DropdownMenuItem<String>(
-                    value: value,
-                    child: Text(value),
-                  );
-                }).toList(),
-              ),
+              AnimatedBuilder(
+                  animation: selectedProvince,
+                  builder: (context, snapshot) {
+                    return DropdownButtonFormField<String>(
+                      value: selectedProvince.value,
+                      menuMaxHeight: 300,
+                      onChanged: (String? value) {
+                        setState(() => selectedProvince.value = value!);
+                      },
+                      decoration: const InputDecoration(
+                        labelText: "Tỉnh",
+                        border: OutlineInputBorder(),
+                      ),
+                      items: provinces.map<DropdownMenuItem<String>>((String value) {
+                        return DropdownMenuItem<String>(
+                          value: value,
+                          child: Text(value),
+                        );
+                      }).toList(),
+                    );
+                  }),
               const SizedBox(height: 10),
               SizedBox(
                   height: 80,
@@ -135,13 +147,13 @@ class _LandingScreenState extends State<LandingScreen> {
               Padding(
                   padding: const EdgeInsets.only(top: 20),
                   child: ElevatedButton(
-                      onPressed: selectedProvince != "Chọn tỉnh" &&
+                      onPressed: selectedProvince.value != "Chọn tỉnh" &&
                               phoneNumber.length > 9 &&
                               !finding
                           ? () {
                               setState(() => finding = true);
-                              searchStudent(
-                                      provinces.indexOf(selectedProvince).toString(), phoneNumber)
+                              searchStudent(provinces.indexOf(selectedProvince.value).toString(),
+                                      phoneNumber)
                                   .then((data) {
                                 setState(() => finding = false);
                                 if (data.isNotEmpty) {

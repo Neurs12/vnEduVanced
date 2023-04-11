@@ -1,7 +1,7 @@
-import 'package:vneduvanced/main.dart';
-import 'package:vneduvanced/utils/reverse_api.dart';
-import 'package:vneduvanced/utils/prefs.dart';
-import 'package:vneduvanced/screen_manager.dart';
+import '../main.dart';
+import '../utils/reverse_api.dart';
+import '../utils/prefs.dart';
+import '../screen_manager.dart';
 import 'package:flutter/material.dart';
 import 'styles_setup.dart';
 
@@ -68,10 +68,27 @@ class _ScoresScreenState extends State<ScoresScreen> {
           centerTitle: true,
           leading: IconButton(
               onPressed: () => Navigator.of(context)
-                  .pushReplacement(MaterialPageRoute(builder: (context) => const StyleSetup())),
+                  .push(MaterialPageRoute(builder: (context) => const StyleSetup())),
               icon: const Icon(Icons.color_lens_outlined)),
           title: const Text("vnEdu Vanced"),
           actions: [
+            AnimatedBuilder(
+                animation: updateStatus,
+                builder: (context, child) {
+                  return Padding(
+                      padding: EdgeInsets.only(right: updateStatus.value == "checking" ? 10 : 0),
+                      child: updateStatus.value == "checking"
+                          ? const SizedBox(
+                              height: 20, width: 20, child: CircularProgressIndicator())
+                          : updateStatus.value == "up-to-date"
+                              ? const Icon(Icons.download_done)
+                              : IconButton(
+                                  onPressed: () {
+                                    Navigator.push(context,
+                                        MaterialPageRoute(builder: (context) => Screen().update));
+                                  },
+                                  icon: const Icon(Icons.downloading)));
+                }),
             IconButton(
                 splashColor: Colors.transparent,
                 highlightColor: Colors.transparent,
@@ -393,7 +410,7 @@ class GrayBox extends StatelessWidget {
         height: height,
         width: width,
         decoration: BoxDecoration(
-            color: Colors.grey[themeMode.value == ThemeMode.dark ? 700 : 300],
+            color: Colors.grey[themeMode.value == ThemeMode.dark ? 900 : 300],
             borderRadius: BorderRadius.all(Radius.circular(radius ?? 10000))));
   }
 }

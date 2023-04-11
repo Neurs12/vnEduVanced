@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'utils/launch_navigator.dart';
+import 'utils/check_update.dart';
 import 'utils/prefs.dart';
 
 ValueNotifier<ThemeMode> themeMode = ValueNotifier<ThemeMode>(ThemeMode.light);
 ValueNotifier<MaterialColor> colorTheme = ValueNotifier<MaterialColor>(Colors.pink);
+ValueNotifier<String> updateStatus = ValueNotifier<String>("checking");
 
 List<MaterialColor> colorsList = [
   Colors.pink,
@@ -19,13 +21,16 @@ List<MaterialColor> colorsList = [
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  checkUpdate().then((val) => updateStatus.value = !val ? "up-to-date" : "update-available");
   themeMode.value = await getIsDark() ? ThemeMode.dark : ThemeMode.light;
   colorTheme.value = colorsList[await getColor()];
-  runApp(AppContainer(route: await navigate()));
+  var route = await navigate();
+  runApp(AppContainer(route: route));
 }
 
 class AppContainer extends StatelessWidget {
-  final dynamic route;
+  final Widget route;
   const AppContainer({super.key, required this.route});
 
   @override

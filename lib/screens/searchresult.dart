@@ -1,7 +1,7 @@
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
-import 'package:vneduvanced/utils/reverse_api.dart';
-import 'package:vneduvanced/utils/prefs.dart';
-import 'package:vneduvanced/screen_manager.dart';
+import '../utils/reverse_api.dart';
+import '../utils/prefs.dart';
+import '../screen_manager.dart';
 import 'package:flutter/material.dart';
 
 class SearchResultScreen extends StatefulWidget {
@@ -13,67 +13,83 @@ class SearchResultScreen extends StatefulWidget {
   State<SearchResultScreen> createState() => _SearchResultScreenState();
 }
 
+ValueNotifier<bool> isWrongPass = ValueNotifier<bool>(false);
+
 class _SearchResultScreenState extends State<SearchResultScreen> {
   String password = "";
-  bool isWrongPass = false;
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        appBar: AppBar(title: const Text("Kết quả tra cứu")),
-        body: Stack(children: [
-          SingleChildScrollView(
-              child: AnimationLimiter(
-                  child: Column(
-            children: AnimationConfiguration.toStaggeredList(
-              duration: const Duration(milliseconds: 375),
-              childAnimationBuilder: (widget) => SlideAnimation(
-                horizontalOffset: -50,
-                child: FadeInAnimation(
-                  child: widget,
-                ),
-              ),
-              children: [for (dynamic info in widget.data) studentCard(info)],
-            ),
-          ))),
-          Positioned(
-              child: Align(
-                  alignment: Alignment.bottomCenter,
-                  child: Card(
-                      child: Padding(
-                          padding: const EdgeInsets.all(15),
-                          child: SizedBox(
-                              height: 86,
-                              child:
-                                  Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                                const Padding(
-                                    padding: EdgeInsets.only(bottom: 10),
-                                    child: Text(
-                                        "Có thể bỏ trống nếu mật khẩu chính là số điện thoại.")),
-                                TextField(
-                                    obscureText: !isWrongPass,
-                                    decoration: const InputDecoration(
-                                      labelText: "Mật khẩu",
-                                      border: OutlineInputBorder(gapPadding: 1),
-                                    ),
-                                    onChanged: (value) => password = value)
-                              ]))))))
-        ]));
+    return AnimatedBuilder(
+        animation: isWrongPass,
+        builder: (context, child) {
+          return Scaffold(
+              appBar: AppBar(title: const Text("Kết quả tra cứu")),
+              body: Stack(children: [
+                SingleChildScrollView(
+                    child: AnimationLimiter(
+                        child: Column(
+                  children: AnimationConfiguration.toStaggeredList(
+                    duration: const Duration(milliseconds: 375),
+                    childAnimationBuilder: (widget) => SlideAnimation(
+                      horizontalOffset: -50,
+                      child: FadeInAnimation(
+                        child: widget,
+                      ),
+                    ),
+                    children: [
+                      for (dynamic info in widget.data)
+                        StudentCard(info: info, phone: widget.phone, password: password)
+                    ],
+                  ),
+                ))),
+                Positioned(
+                    child: Align(
+                        alignment: Alignment.bottomCenter,
+                        child: Card(
+                            child: Padding(
+                                padding: const EdgeInsets.all(15),
+                                child: SizedBox(
+                                    height: 86,
+                                    child: Column(
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: [
+                                          const Padding(
+                                              padding: EdgeInsets.only(bottom: 10),
+                                              child: Text(
+                                                  "Có thể bỏ trống nếu mật khẩu chính là số điện thoại.")),
+                                          TextField(
+                                              obscureText: isWrongPass.value,
+                                              decoration: const InputDecoration(
+                                                labelText: "Mật khẩu",
+                                                border: OutlineInputBorder(gapPadding: 1),
+                                              ),
+                                              onChanged: (value) => password = value)
+                                        ]))))))
+              ]));
+        });
   }
+}
 
-  Widget studentCard(info) {
+class StudentCard extends StatelessWidget {
+  final dynamic info;
+  final String password;
+  final String phone;
+
+  const StudentCard({super.key, this.info, required this.phone, required this.password});
+
+  @override
+  Widget build(BuildContext context) {
     return Card(
         child: InkWell(
             borderRadius: const BorderRadius.all(Radius.circular(12)),
             onTap: () {
-              if (password == "") {
-                password = widget.phone;
-              }
-              checkPassword(info["ma_hoc_sinh"], info["tinh_id"], password, info["nam_hoc"])
+              checkPassword(info["ma_hoc_sinh"], info["tinh_id"], password != "" ? password : phone,
+                      info["nam_hoc"])
                   .then((result) {
                 if (result) {
-                  saveAll(widget.phone, info["tinh_id"], info["ma_hoc_sinh"], password,
-                          info["nam_hoc"], info["full_name"])
+                  saveAll(phone, info["tinh_id"], info["ma_hoc_sinh"],
+                          password != "" ? password : phone, info["nam_hoc"], info["full_name"])
                       .then((_) {
                     Navigator.of(context).popUntil((route) => route.isFirst);
                     Navigator.pushReplacement(
@@ -87,9 +103,9 @@ class _SearchResultScreenState extends State<SearchResultScreen> {
                       behavior: SnackBarBehavior.floating,
                       content: Text("Sai mật khẩu. Vui lòng kiểm tra lại!",
                           textAlign: TextAlign.center)));
-                  setState(() => isWrongPass = true);
+                  isWrongPass.value = true;
                   Future.delayed(const Duration(seconds: 4, milliseconds: 400))
-                      .then((_) => setState(() => isWrongPass = false));
+                      .then((_) => isWrongPass.value = false);
                 }
               });
             },

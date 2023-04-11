@@ -75,17 +75,6 @@ Future<bool> checkUser() async {
   return true;
 }
 
-Future<bool> setSkipVersion(version) async {
-  final prefs = await SharedPreferences.getInstance();
-  await prefs.setString("skipVersion", version);
-  return true;
-}
-
-Future<String> getSkipVersion() async {
-  final prefs = await SharedPreferences.getInstance();
-  return prefs.getString("skipVersion") ?? "";
-}
-
 Future<bool> setupStatus({bool? status}) async {
   final prefs = await SharedPreferences.getInstance();
   return status == null ? prefs.getBool("status") ?? false : await prefs.setBool("status", status);

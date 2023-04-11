@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:vneduvanced/screen_manager.dart';
-import 'check_update.dart';
+import '../screen_manager.dart';
 import 'prefs.dart';
 
 Future<Widget> navigate() async {
@@ -8,16 +7,6 @@ Future<Widget> navigate() async {
 
   if (await checkUser()) {
     route = Screen().scores;
-  }
-
-  bool status = false;
-  try {
-    status = await checkUpdate();
-  } catch (_) {
-    route = Screen().noInternet;
-  }
-  if (status) {
-    route = Screen().update;
   }
 
   if (!(await setupStatus())) {
