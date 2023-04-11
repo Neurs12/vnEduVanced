@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../utils/launch_navigator.dart';
+import 'package:http/http.dart' as http;
 
 class NoInternet extends StatefulWidget {
   const NoInternet({Key? key}) : super(key: key);
@@ -10,6 +10,15 @@ class NoInternet extends StatefulWidget {
 
 class _NoInternetState extends State<NoInternet> {
   bool retrying = false;
+
+  Future<bool> checkInternet() async {
+    try {
+      await http.get(Uri.parse("https://google.com"));
+    } catch (_) {
+      return false;
+    }
+    return true;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -28,17 +37,10 @@ class _NoInternetState extends State<NoInternet> {
                   ? null
                   : () async {
                       setState(() => retrying = !retrying);
-                      Widget route = await navigate();
-                      if (!mounted) return;
-                      Navigator.of(context).popUntil((route) => route.isFirst);
-                      Navigator.pushReplacement(
-                        context,
-                        PageRouteBuilder(
-                          pageBuilder: (context, animation1, animation2) => route,
-                          transitionDuration: Duration.zero,
-                          reverseTransitionDuration: Duration.zero,
-                        ),
-                      );
+                      if (await checkInternet()) {
+                        if (!mounted) return;
+                        Navigator.of(context).pop();
+                      }
                     },
               child: SizedBox(
                   width: 75,

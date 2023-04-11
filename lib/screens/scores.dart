@@ -150,13 +150,13 @@ class _ScoresScreenState extends State<ScoresScreen> {
                                           dataDisplayer = midBridgeBuild()
                                         }));
                                   }).catchError((_) {
-                                    Navigator.pushReplacement(
+                                    Navigator.push(
                                       context,
                                       MaterialPageRoute(builder: (context) => const NoInternet()),
                                     );
                                   });
                                 }).catchError((_) {
-                                  Navigator.pushReplacement(
+                                  Navigator.push(
                                     context,
                                     MaterialPageRoute(builder: (context) => const NoInternet()),
                                   );

@@ -171,7 +171,7 @@ class _LandingScreenState extends State<LandingScreen> {
                                       "Không tìm thấy học sinh. Vui lòng kiểm tra số điện thoại và tỉnh của bạn!");
                                 }
                               }).catchError((_) {
-                                Navigator.pushReplacement(
+                                Navigator.push(
                                   context,
                                   MaterialPageRoute(builder: (context) => const NoInternet()),
                                 );
