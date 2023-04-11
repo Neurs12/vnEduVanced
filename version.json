@@ -1,4 +1,4 @@
 {
-  "version": "1.4.5",
-  "changelog": "## Improvements:\n- Không bắt buộc kiểm tra cập nhật mỗi lần mở app, làm tăng thời gian chờ.\n- Chỉnh sửa giao diện không khiến cho cả ứng dụng phải tải lại từ đầu.\n- Tự động điền tỉnh nếu đã có danh bạ đang được dùng.\n- Bỏ qua reCAPTCHA khi tìm kiếm danh bạ.\n## App's technologies:\n- Nâng phiên bản nền Flutter lên 3.7.10."
+  "version": "1.4.8",
+  "changelog": "## Improvements:\n- Bổ các trường hợp mất mạng để thông báo lỗi cho người dùng.\n- Sửa lỗi mật khẩu hiển thị.\n- Sử dụng Toast để hiển thị, tránh tình trạng không thể chỉnh sửa mật khẩu khi thông báo"
 }
