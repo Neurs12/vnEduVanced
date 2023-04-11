@@ -1,3 +1,5 @@
+import 'package:vneduvanced/screens/no_internet.dart';
+
 import '../utils/reverse_api.dart';
 import '../utils/prefs.dart';
 import 'package:flutter/material.dart';
@@ -169,11 +171,10 @@ class _LandingScreenState extends State<LandingScreen> {
                                       "Không tìm thấy học sinh. Vui lòng kiểm tra số điện thoại và tỉnh của bạn!");
                                 }
                               }).catchError((_) {
-                                setState(() => {
-                                      error =
-                                          "Đã xảy ra lỗi, vui lòng kiểm tra lại kết nối mạng của bạn hoặc thử lại sau!",
-                                      finding = false
-                                    });
+                                Navigator.pushReplacement(
+                                  context,
+                                  MaterialPageRoute(builder: (context) => const NoInternet()),
+                                );
                               });
                             }
                           : null,

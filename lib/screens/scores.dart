@@ -1,3 +1,5 @@
+import 'package:vneduvanced/screens/no_internet.dart';
+
 import '../main.dart';
 import '../utils/reverse_api.dart';
 import '../utils/prefs.dart';
@@ -147,7 +149,17 @@ class _ScoresScreenState extends State<ScoresScreen> {
                                           totalScore.value = 0,
                                           dataDisplayer = midBridgeBuild()
                                         }));
+                                  }).catchError((_) {
+                                    Navigator.pushReplacement(
+                                      context,
+                                      MaterialPageRoute(builder: (context) => const NoInternet()),
+                                    );
                                   });
+                                }).catchError((_) {
+                                  Navigator.pushReplacement(
+                                    context,
+                                    MaterialPageRoute(builder: (context) => const NoInternet()),
+                                  );
                                 });
                               },
                               decoration: const InputDecoration(border: OutlineInputBorder()),

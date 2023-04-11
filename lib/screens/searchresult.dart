@@ -1,4 +1,5 @@
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import '../utils/reverse_api.dart';
 import '../utils/prefs.dart';
 import '../screen_manager.dart';
@@ -20,6 +21,7 @@ class _SearchResultScreenState extends State<SearchResultScreen> {
 
   @override
   Widget build(BuildContext context) {
+    print(isWrongPass.value);
     return AnimatedBuilder(
         animation: isWrongPass,
         builder: (context, child) {
@@ -59,7 +61,7 @@ class _SearchResultScreenState extends State<SearchResultScreen> {
                                               child: Text(
                                                   "Có thể bỏ trống nếu mật khẩu chính là số điện thoại.")),
                                           TextField(
-                                              obscureText: isWrongPass.value,
+                                              obscureText: !isWrongPass.value,
                                               decoration: const InputDecoration(
                                                 labelText: "Mật khẩu",
                                                 border: OutlineInputBorder(gapPadding: 1),
@@ -96,14 +98,8 @@ class StudentCard extends StatelessWidget {
                         context, MaterialPageRoute(builder: (context) => Screen().scores));
                   });
                 } else {
-                  ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.all(Radius.circular(20))),
-                      margin: EdgeInsets.only(bottom: 130, left: 20, right: 20),
-                      behavior: SnackBarBehavior.floating,
-                      content: Text("Sai mật khẩu. Vui lòng kiểm tra lại!",
-                          textAlign: TextAlign.center)));
-                  isWrongPass.value = true;
+                  Fluttertoast.showToast(
+                      msg: "Sai mật khẩu. Vui lòng thử lại.", toastLength: Toast.LENGTH_LONG);
                   Future.delayed(const Duration(seconds: 4, milliseconds: 400))
                       .then((_) => isWrongPass.value = false);
                 }
