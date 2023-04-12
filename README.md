@@ -88,6 +88,8 @@ Hoặc:
 ```
 Phần này sẽ quyết định liệu mật khẩu bạn nhập có đúng hay không. Nếu có, `success` sẽ là true, nếu sai thì là false.
 
+Khi mật khẩu đúng thì bên server của vnEdu sẽ đăng kí rằng phiên đăng nhập đó đã nhập đúng mật khẩu và sẽ cho phép trả về dữ liệu liên quan đến danh bạ đó.
+
 #### Bước 3: Lấy bảng điểm thô từ API 4
 
 Khi tất cả mọi thứ đã hoàn thành, ta tiến hành yêu cầu bảng điểm từ server:
