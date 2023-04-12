@@ -1,5 +1,6 @@
 
-![Frame 1](https://user-images.githubusercontent.com/31346263/213615349-244de13e-c351-40fc-be0a-3f317fb20eca.png)
+![Frame 1](https://user-images.githubusercontent.com/31346263/231434550-a4c34302-804b-4df3-876f-226f808a64de.png)
+
 
 ## 1. Tại sao?
 Tiện lợi cho việc xem điểm của học sinh, tất cả các con điểm đều được chuyển sang điểm trung bình, hiển thị theo môn và theo màu xét theo mức độ "nguy hiểm" của con điểm. Ứng dụng dễ dàng tiếp cận hơn so với bản cũ, không quảng cáo, đơn giản và dễ hiểu kèm theo đó là tự động lưu thông tin đăng nhập để không cần phải tra cứu mỗi lần muốn xem điểm. Được phát triển dựa theo hướng dẫn thiết kế của Material You, đem lại trải nghiệm tốt nhất cho người dùng.
