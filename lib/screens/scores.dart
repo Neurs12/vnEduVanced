@@ -37,7 +37,6 @@ class _ScoresScreenState extends State<ScoresScreen> {
     selectedSemesterAsStr = selectedSemester == 0 ? "Học kì 1" : "Học kì 2";
     selectedYear = (await getYearViewer())!;
     availableYearsDisplayer = await availableYears(userObj!["studentId"]!, userObj!["provinceId"]!);
-    print("rebuilt");
     return true;
   }
 
@@ -99,7 +98,7 @@ class _ScoresScreenState extends State<ScoresScreen> {
                 focusColor: Colors.transparent,
                 onPressed: () => Navigator.push(
                     context, MaterialPageRoute(builder: (context) => Screen().landing)),
-                icon: const Icon(Icons.edit))
+                icon: const Icon(Icons.mode_edit_outline))
           ],
         ),
         body: FutureBuilder(

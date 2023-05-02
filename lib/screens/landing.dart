@@ -1,5 +1,5 @@
 import 'package:vneduvanced/screens/no_internet.dart';
-
+import 'package:flutter/services.dart';
 import '../utils/reverse_api.dart';
 import '../utils/prefs.dart';
 import 'package:flutter/material.dart';
@@ -132,6 +132,7 @@ class _LandingScreenState extends State<LandingScreen> {
               SizedBox(
                   height: 80,
                   child: TextFormField(
+                    inputFormatters: [FilteringTextInputFormatter.digitsOnly],
                     decoration: const InputDecoration(
                       icon: Icon(Icons.phone),
                       labelText: "Số điện thoại",

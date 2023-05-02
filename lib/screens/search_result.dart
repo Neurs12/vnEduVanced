@@ -24,7 +24,6 @@ class _SearchResultScreenState extends State<SearchResultScreen> {
     return AnimatedBuilder(
         animation: showPass,
         builder: (context, child) {
-          print(showPass.value);
           return Scaffold(
               appBar: AppBar(title: const Text("Kết quả tra cứu")),
               body: Stack(children: [
@@ -39,10 +38,11 @@ class _SearchResultScreenState extends State<SearchResultScreen> {
                         child: widget,
                       ),
                     ),
-                    children: [
-                      for (dynamic info in widget.data)
-                        StudentCard(info: info, phone: widget.phone, password: password)
-                    ],
+                    children: <Widget>[
+                          for (dynamic info in widget.data)
+                            StudentCard(info: info, phone: widget.phone, password: password)
+                        ] +
+                        [const SizedBox(height: 135)],
                   ),
                 ))),
                 Positioned(
@@ -52,7 +52,7 @@ class _SearchResultScreenState extends State<SearchResultScreen> {
                             child: Padding(
                                 padding: const EdgeInsets.all(15),
                                 child: SizedBox(
-                                    height: 86 + 8,
+                                    height: 94,
                                     child: Column(
                                         crossAxisAlignment: CrossAxisAlignment.start,
                                         children: [

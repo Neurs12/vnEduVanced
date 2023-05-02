@@ -3,7 +3,7 @@ description: A custom, ad-free score overview for Vietnamese students.
 
 publish_to: 'none'
 
-version: 1.5.0+1
+version: 1.5.5+1
 
 environment:
   sdk: '>=2.18.6 <3.0.0'
@@ -11,17 +11,17 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-
-  http: ^0.13.5
+  dio: ^5.1.1
+  flutter_markdown: ^0.6.14
   flutter_staggered_animations: ^1.1.1
-  shared_preferences: ^2.0.15
-  flutter_markdown: ^0.6.13
-  dio: ^5.0.1
-  permission_handler: ^10.2.0
-  path_provider: ^2.0.11
-  open_file_plus: ^3.3.0
-  package_info_plus: ^3.0.2
   fluttertoast: ^8.2.1
+  http: ^0.13.6
+  open_file_plus: ^3.4.1
+  package_info_plus: ^3.1.2
+  path_provider: ^2.0.14
+  permission_handler: ^10.2.0
+  shared_preferences: ^2.1.0
+
 
 dev_dependencies:
   flutter_test:
