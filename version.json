@@ -1,4 +1,4 @@
 {
-  "version": "1.5.0",
-  "changelog": "## Improvements:\n- Thay đổi cách hoạt động của phần nhập mật khẩu\n- Thêm làm mới ở trang điểm (vuốt từ trên xuống)\n- Chỉnh sửa một số lỗi khi sử dụng."
+  "version": "1.5.2",
+  "changelog": "## Improvements:\n- Loại bỏ các phần nhập file không cần thiết.\n- Chỉ nhập vào chữ số trong phần nhập số điện thoại.\n- Tảo khoảng cách để kết quả tìm kiếm không bị che sau phần nhập mật khẩu nếu danh sách quá dài."
 }
