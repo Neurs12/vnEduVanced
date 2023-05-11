@@ -44,10 +44,9 @@ class _StyleSetupState extends State<StyleSetup> {
                   return const Icon(Icons.light_mode_outlined);
                 }),
                 value: themeMode.value == ThemeMode.dark,
-                onChanged: (_) => setState(() => {
-                      themeMode.value =
+                onChanged: (_) => setState(() => themeMode.value =
                           themeMode.value == ThemeMode.dark ? ThemeMode.light : ThemeMode.dark
-                    }))
+                    ))
           ])),
           CardSet(
               child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [

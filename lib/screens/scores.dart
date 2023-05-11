@@ -389,9 +389,9 @@ class DummyGrayboxLoader extends StatelessWidget {
                       child: GrayBox(height: 65, width: double.infinity, radius: 5))),
             ])
           : Container(),
-      SizedBox(
+      const SizedBox(
           height: 202,
-          child: Column(children: const [
+          child: Column(children: [
             Padding(
                 padding: EdgeInsets.only(bottom: 20, top: 10),
                 child: GrayBox(height: 40, width: 250)),
@@ -403,13 +403,13 @@ class DummyGrayboxLoader extends StatelessWidget {
           crossAxisAlignment: WrapCrossAlignment.center,
           children: [
             for (int i = 0; i < 10; i++)
-              Card(
+              const Card(
                   child: SizedBox(
                       height: 100,
                       width: 175,
                       child: Padding(
-                        padding: const EdgeInsets.all(12),
-                        child: Column(mainAxisAlignment: MainAxisAlignment.center, children: const [
+                        padding: EdgeInsets.all(12),
+                        child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
                           GrayBox(height: 20, width: 80),
                           Padding(
                               padding: EdgeInsets.only(top: 5),

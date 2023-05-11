@@ -3,7 +3,7 @@ description: A custom, ad-free score overview for Vietnamese students.
 
 publish_to: 'none'
 
-version: 1.5.5+1
+version: 1.6.0+1
 
 environment:
   sdk: '>=2.18.6 <3.0.0'
