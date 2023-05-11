@@ -8,7 +8,7 @@ Tiện lợi cho việc xem điểm của học sinh, tất cả các con điể
 - Hiện vnEdu khi tra cứu có reCAPTCHA nhưng API không hề thay đổi nên ứng dụng này sẽ không bị ảnh hưởng bởi thay đổi đó.
 
 ## 2. Cài đặt
-#### [app-release.apk](https://github.com/Neurs12/vnEduVanced/raw/main/app-release.apk) / 1.5.0
+#### [app-release.apk](https://github.com/Neurs12/vnEduVanced/raw/main/app-release.apk)
 
 Chỉ cài được cho máy chạy Android, iPhone không được hỗ trợ vì không có kinh phí xuất bản ứng dụng lên cửa hàng!
 
