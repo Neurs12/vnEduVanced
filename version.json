@@ -1,4 +1,4 @@
 {
-  "version": "1.5.5",
-  "changelog": "## Improvements:\n- Loại bỏ các phần nhập file không cần thiết.\n- Chỉ nhập vào chữ số trong phần nhập số điện thoại.\n- Tạo khoảng cách để kết quả tìm kiếm không bị che sau phần nhập mật khẩu nếu danh sách quá dài.\n- Cập nhật các file mã nguồn mở lên mới nhất.\n- Nâng cấp bản phiên bản nền Flutter."
+  "version": "1.6.0",
+  "changelog": "## Nâng cấp bản phiên bản nền Flutter lên 3.10.0"
 }
